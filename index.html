@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZeroBG Master</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="main-container">
+        <header>
+            <div class="logo">
+                <i class="fa-solid fa-wand-magic-sparkles"></i>
+                <h1>ZeroBG Master</h1>
+            </div>
+            <p>Professional Background Removal Tool - Powered by AI Technology</p>
+        </header>
+
+        <div class="content-wrapper">
+            <div class="content-grid">
+                <div class="left-column">
+                    <div class="trial-box">
+                        <p><i class="fa-solid fa-gift"></i> <strong>Free Trials Left: <span id="trialCount">3</span></strong></p>
+                        <p class="small-text">Subscribe for unlimited background removals!</p>
+                    </div>
+
+                    <div class="upload-box" id="uploadBox">
+                        <i class="fa-solid fa-cloud-arrow-up"></i>
+                        <h2>Upload Your Image</h2>
+                        <p>Click or drag & drop your image here</p>
+                        <p class="formats">JPEG, PNG, JPG formats supported</p>
+                        <input type="file" id="fileInput" accept="image/jpeg, image/png, image/jpg" hidden>
+                    </div>
+                    
+                    <button class="remove-bg-btn" id="removeBtn" disabled>
+                        <i class="fa-solid fa-eraser"></i> Remove Background
+                    </button>
+                    <p id="statusText">Please upload an image to start.</p>
+                </div>
+
+                <div class="right-column">
+                    <div class="image-preview-container">
+                        <div class="image-box">
+                            <p class="image-title"><i class="fa-regular fa-image"></i> Original Image</p>
+                            <div class="image-placeholder" id="originalPlaceholder">
+                                Original image will be shown here
+                            </div>
+                            <img id="originalPreview" src="" alt="Original Preview" style="display:none;">
+                        </div>
+                        <div class="image-box">
+                            <p class="image-title"><i class="fa-solid fa-circle-check"></i> Processed Image</p>
+                            <div class="image-placeholder" id="processedPlaceholder">
+                                Processed image will be shown here
+                            </div>
+                            <img id="processedPreview" src="" alt="Processed Preview" style="display:none;">
+                            <a href="#" class="download-btn" id="downloadBtn" style="display: none;">
+                                <i class="fa-solid fa-download"></i> Download Image
+                            </a>
+                        </div>
+                    </div>
+                    <div class="upgrade-box">
+                        <h3><i class="fa-solid fa-crown"></i> Upgrade to Pro</h3>
+                        <p>Get unlimited high-quality background removals.</p>
+                        <button class="subscribe-btn" id="subscribeButton">
+                            <i class="fa-solid fa-cart-shopping"></i> Subscribe Now
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <footer>
+                <p>ZeroBG Master © 2025 | <a href="https://www.termsfeed.com/live/4a6adf05-4797-49fd-801b-401224002eba" target="_blank">Privacy Policy</a></p>
+            </footer>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
