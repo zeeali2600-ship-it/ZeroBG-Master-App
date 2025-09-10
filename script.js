@@ -1,6 +1,5 @@
 document.addEventListener('DOMContentLoaded', function() {
     // --- CONFIGURATION ---
-    // URL ab bohat simple ho gaya hai
     const API_ENDPOINT_URL = '/remove-background';
 
     // --- ELEMENTS ---
@@ -14,6 +13,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const processedPlaceholder = document.getElementById('processedPlaceholder');
     const downloadBtn = document.getElementById('downloadBtn');
     const trialCountSpan = document.getElementById('trialCount');
+    const subscribeButton = document.getElementById('subscribeButton');
     
     let selectedFile = null;
     let processedImageBlob = null;
@@ -71,6 +71,11 @@ document.addEventListener('DOMContentLoaded', function() {
         a.click();
         window.URL.revokeObjectURL(url);
         document.body.removeChild(a);
+    });
+
+    subscribeButton.addEventListener('click', () => {
+        const storeUrl = 'https://apps.microsoft.com/store/apps';
+        window.open(storeUrl, '_blank');
     });
 
     // --- FUNCTIONS ---
