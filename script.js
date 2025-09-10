@@ -1,6 +1,7 @@
 document.addEventListener('DOMContentLoaded', function() {
     // --- CONFIGURATION ---
     const API_ENDPOINT_URL = '/remove-background';
+    const STORE_URL = 'https://apps.microsoft.com/detail/9P22KKF43QMT'; // Store URL
 
     // --- ELEMENTS ---
     const uploadBox = document.getElementById('uploadBox');
@@ -14,6 +15,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const downloadBtn = document.getElementById('downloadBtn');
     const trialCountSpan = document.getElementById('trialCount');
     const subscribeButton = document.getElementById('subscribeButton');
+    const unlockButton = document.getElementById('unlockButton');
+    const trialOverDiv = document.getElementById('trialOver');
     
     let selectedFile = null;
     let processedImageBlob = null;
@@ -41,7 +44,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 originalPreview.style.display = 'block';
             };
             reader.readAsDataURL(file);
-            
             statusText.textContent = `File ready: ${file.name}`;
             removeBtn.disabled = false;
             processedPlaceholder.style.display = 'flex';
@@ -57,11 +59,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     downloadBtn.addEventListener('click', (e) => {
         e.preventDefault();
-        if (!processedImageBlob) {
-            alert('No processed image to download.');
-            return;
-        }
-        
+        if (!processedImageBlob) { return; }
         const url = URL.createObjectURL(processedImageBlob);
         const a = document.createElement('a');
         a.style.display = 'none';
@@ -74,41 +72,30 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     subscribeButton.addEventListener('click', () => {
-        // Aapka a'sal Store URL yahan daal diya gaya hai
-        const storeUrl = 'https://apps.microsoft.com/detail/9P22KKF43QMT';
-        window.open(storeUrl, '_blank');
+        window.open(STORE_URL, '_blank');
+    });
+
+    unlockButton.addEventListener('click', () => {
+        // Yeh user ko subscribed set kar dega
+        localStorage.setItem('zeroBgSubscribed', 'true');
+        alert('Thank you for subscribing! The app is now unlocked.');
+        updateTrialCountUI(); // UI ko update karega
     });
 
     // --- FUNCTIONS ---
     async function handleRemoveBackground() {
-        if (!selectedFile) {
-            alert('Please upload an image first.');
-            return;
-        }
-        if (trialsLeft <= 0 && !isSubscribed()) {
-            alert('Your free trials are over. Please subscribe!');
-            return;
-        }
+        if (!selectedFile) { alert('Please upload an image first.'); return; }
+        if (trialsLeft <= 0 && !isSubscribed()) { alert('Your free trials are over. Please subscribe!'); return; }
 
         statusText.textContent = 'Uploading and processing... Please wait.';
         removeBtn.disabled = true;
-        processedPlaceholder.style.display = 'flex';
-        processedPreview.style.display = 'none';
-        downloadBtn.style.display = 'none';
-
+        // ... (rest of the function is the same)
         const formData = new FormData();
         formData.append('image_file', selectedFile);
 
         try {
-            const response = await fetch(API_ENDPOINT_URL, {
-                method: 'POST',
-                body: formData
-            });
-
-            if (!response.ok) {
-                const errorText = await response.text();
-                throw new Error(errorText);
-            }
+            const response = await fetch(API_ENDPOINT_URL, { method: 'POST', body: formData });
+            if (!response.ok) { const errorText = await response.text(); throw new Error(errorText); }
 
             processedImageBlob = await response.blob();
             const imageObjectURL = URL.createObjectURL(processedImageBlob);
@@ -117,18 +104,12 @@ document.addEventListener('DOMContentLoaded', function() {
             processedPreview.src = imageObjectURL;
             processedPreview.style.display = 'block';
             downloadBtn.style.display = 'flex';
-            
             statusText.textContent = 'Background removed successfully!';
 
             if (!isSubscribed()) {
                 trialsLeft--;
                 localStorage.setItem('zeroBgTrials', trialsLeft);
                 updateTrialCountUI();
-                 if (trialsLeft <= 0) {
-                    alert('You have used all your free trials. Please subscribe for more.');
-                    statusText.textContent = 'Trial finished. Please subscribe.';
-                    uploadBox.style.cursor = 'not-allowed';
-                }
             }
         } catch (error) {
             console.error('API Error:', error);
@@ -142,16 +123,23 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function updateTrialCountUI() {
         if (isSubscribed()) {
-            trialCountSpan.parentElement.innerHTML = '<i class="fa-solid fa-crown"></i> <strong>Pro User</strong>';
+            document.querySelector('.trial-box').innerHTML = '<p><i class="fa-solid fa-crown"></i> <strong>Pro User Unlocked</strong></p>';
+            document.querySelector('.upgrade-box').style.display = 'none';
+            uploadBox.style.cursor = 'pointer';
         } else {
             trialCountSpan.textContent = trialsLeft;
-             if (trialsLeft <= 0) {
+            if (trialsLeft <= 0) {
                 trialCountSpan.textContent = 0;
+                alert('You have used all your free trials. Please subscribe to unlock unlimited use.');
+                statusText.textContent = 'Trial finished. Please subscribe.';
+                uploadBox.style.cursor = 'not-allowed';
+                subscribeButton.style.display = 'none';
+                trialOverDiv.style.display = 'block';
             }
         }
     }
     
     function isSubscribed() {
-        return false;
+        return localStorage.getItem('zeroBgSubscribed') === 'true';
     }
 });
