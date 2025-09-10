@@ -74,7 +74,8 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     subscribeButton.addEventListener('click', () => {
-        const storeUrl = 'https://apps.microsoft.com/store/apps';
+        // Aapka a'sal Store URL yahan daal diya gaya hai
+        const storeUrl = 'https://apps.microsoft.com/detail/9P22KKF43QMT';
         window.open(storeUrl, '_blank');
     });
 
